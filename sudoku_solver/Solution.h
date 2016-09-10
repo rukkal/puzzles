@@ -7,6 +7,8 @@ class Solution
 public:
    void solveSudoku(std::vector<std::vector<char>>& board) const
    {
+      assert(board.size() == BOARD_DIMENSION);
+      assert(board[0].size() == BOARD_DIMENSION);
       auto emptyCells = createEmptyCells(board);
       auto solvedCells = std::vector<SolvedCell>{};
       bool solutionFound = solveSudokuRec(emptyCells, solvedCells);
@@ -15,24 +17,27 @@ public:
    }
 
 private:
+   static constexpr size_t BOARD_DIMENSION = 9;
+
+private:
    struct Cell
    {
       Cell(size_t i, size_t j)
          : i(i)
          , j(j)
       {}
-      size_t getId() const { return i*9 + j; }
+      size_t getId() const { return i*BOARD_DIMENSION + j; }
       size_t i, j;
    };
 
    struct EmptyCell : public Cell
    {
-      EmptyCell(size_t i, size_t j, const std::bitset<10>& possibleDigits)
+      EmptyCell(size_t i, size_t j, const std::bitset<BOARD_DIMENSION>& possibleDigits)
          : Cell(i, j)
          , possibleDigits(possibleDigits)
       {}
 
-      std::bitset<10> possibleDigits;
+      std::bitset<BOARD_DIMENSION> possibleDigits;
    };
 
    struct SolvedCell : public Cell
@@ -49,7 +54,7 @@ private:
    std::vector<EmptyCell> createEmptyCells(const std::vector<std::vector<char>>& board) const
    {
       auto emptyCells = std::vector<EmptyCell>{};
-      emptyCells.reserve(9*9);
+      emptyCells.reserve(BOARD_DIMENSION*BOARD_DIMENSION);
       for(size_t i=0; i<board.size(); ++i)
       {
          for(size_t j=0; j<board[0].size(); ++j)
@@ -63,19 +68,16 @@ private:
       return emptyCells;
    }
 
-   std::bitset<10> searchInitialPossibleDigitsOfEmptyCell(size_t celli, size_t cellj, const std::vector<std::vector<char>>& board) const
+   std::bitset<BOARD_DIMENSION> searchInitialPossibleDigitsOfEmptyCell(size_t celli, size_t cellj, const std::vector<std::vector<char>>& board) const
    {
-      auto digits = std::bitset<10>{};
+      auto digits = std::bitset<BOARD_DIMENSION>{};
       
-      //digit 0 is not used
-      digits.set(0);
-
       //search clues in the same row
       for(size_t j=0; j<board[0].size(); ++j)
       {
          if(j!=cellj && board[celli][j]!='.')
          {
-            digits.set(board[celli][j] - '0');
+            digits.set(board[celli][j] - '1');
          }
       }
 
@@ -84,7 +86,7 @@ private:
       {
          if(i!=celli && board[i][cellj]!='.')
          {
-            digits.set(board[i][cellj] - '0');
+            digits.set(board[i][cellj] - '1');
          }
       }
 
@@ -97,7 +99,7 @@ private:
          {
             if(i!=celli && j!=cellj && board[i][j]!='.')
             {
-               digits.set(board[i][j] - '0');
+               digits.set(board[i][j] - '1');
             }
          }
       }
@@ -131,9 +133,9 @@ private:
       *posMinCell = emptyCells.back();
       emptyCells.pop_back();
 
-      for(size_t digit=1; digit<=9; ++digit)
+      for(size_t digit=1; digit<=BOARD_DIMENSION; ++digit)
       {
-         bool digitCanBeUsed = minCell.possibleDigits.test(digit);
+         bool digitCanBeUsed = minCell.possibleDigits.test(digit-1);
          if(!digitCanBeUsed)
             continue;
          
@@ -150,19 +152,19 @@ private:
    }
 
 
-   std::bitset<9*9> removeDigitFromEmptyCells(const Cell& cell, size_t digit, std::vector<EmptyCell>& emptyCells) const
+   std::bitset<BOARD_DIMENSION*BOARD_DIMENSION> removeDigitFromEmptyCells(const Cell& cell, size_t digit, std::vector<EmptyCell>& emptyCells) const
    {
-      auto removed = std::bitset<9*9>{};
+      auto removed = std::bitset<BOARD_DIMENSION*BOARD_DIMENSION>{};
       
       for(auto& emptyCell : emptyCells)
       {
          bool isSameRow = emptyCell.i == cell.i;
          bool isSameCol = emptyCell.j == cell.j;
          bool isSameSquare = (emptyCell.i/3 == cell.i/3) && (emptyCell.j/3 == cell.j/3);
-         bool emptyCellHasDigit = emptyCell.possibleDigits.test(digit);
+         bool emptyCellHasDigit = emptyCell.possibleDigits.test(digit-1);
          if((isSameRow || isSameCol || isSameSquare) && emptyCellHasDigit)
          {
-            emptyCell.possibleDigits.reset(digit);
+            emptyCell.possibleDigits.reset(digit-1);
             removed.set(emptyCell.getId());
          }
       }
@@ -170,14 +172,14 @@ private:
       return removed;
    }
 
-   void undoRemoveDigitFromEmptyCells(size_t digit, std::vector<EmptyCell>& emptyCells, const std::bitset<9*9>& removed) const
+   void undoRemoveDigitFromEmptyCells(size_t digit, std::vector<EmptyCell>& emptyCells, const std::bitset<BOARD_DIMENSION*BOARD_DIMENSION>& removed) const
    {
       for(auto& emptyCell : emptyCells)
       {
          bool digitWasRemovedFromThisCell = removed.test(emptyCell.getId());
          if(digitWasRemovedFromThisCell)
          {
-            emptyCell.possibleDigits.set(digit);
+            emptyCell.possibleDigits.set(digit-1);
          }
       }
    }
