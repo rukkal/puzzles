@@ -124,11 +124,12 @@ private:
       }
 
       auto posMinCell = std::min_element(
-         emptyCells.cbegin(),
-         emptyCells.cend(),
+         emptyCells.begin(),
+         emptyCells.end(),
          [](const EmptyCell& c1, const EmptyCell& c2) { return c1.possibleDigits.count() < c2.possibleDigits.count(); });
-      auto minCell = std::move(*posMinCell);
-      emptyCells.erase(posMinCell);
+      auto minCell = *posMinCell;
+      *posMinCell = emptyCells.back();
+      emptyCells.pop_back();
 
       for(size_t digit=1; digit<=9; ++digit)
       {
