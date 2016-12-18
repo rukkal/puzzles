@@ -1,33 +1,34 @@
-#include <gtest/gtest.h>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 #include "solution.h"
 
-TEST(test, empty)
+TEST_CASE("empty")
 {
     auto m = std::vector<std::vector<int>>{{}};
     auto expected = m;
     solution(m);
-    EXPECT_TRUE(expected == m);
+    REQUIRE(m == expected);
 }
 
-TEST(test, 1x1)
+TEST_CASE("1x1")
 {
     auto m = std::vector<std::vector<int>>{{1}};
     auto expected = m;
     solution(m);
-    EXPECT_TRUE(expected == m);
+    REQUIRE(m == expected);
 }
 
-TEST(test, 2x2)
+TEST_CASE("2x2")
 {
     auto m = std::vector<std::vector<int>>{ {1, 2},
                                             {3, 4}};
     auto expected = std::vector<std::vector<int>>{  {3, 1},
                                                     {4, 2}};
     solution(m);
-    EXPECT_TRUE(expected == m);
+    REQUIRE(m == expected);
 }
 
-TEST(test, 3x3)
+TEST_CASE("3x3")
 {
     auto m = std::vector<std::vector<int>>{ {1, 2, 3},
                                             {4, 5, 6},
@@ -36,10 +37,10 @@ TEST(test, 3x3)
                                                     {8, 5, 2},
                                                     {9, 6, 3}};
     solution(m);
-    EXPECT_TRUE(expected == m);
+    REQUIRE(m == expected);
 }
 
-TEST(test, 4x4)
+TEST_CASE("4x4")
 {
     auto m = std::vector<std::vector<int>>{ {1, 2, 3, 4},
                                             {5, 6, 7, 8},
@@ -50,6 +51,6 @@ TEST(test, 4x4)
                                                     {15, 11, 7, 3},
                                                     {16, 12, 8, 4}};
     solution(m);
-    EXPECT_TRUE(expected == m);
+    REQUIRE(m == expected);
 }
 
