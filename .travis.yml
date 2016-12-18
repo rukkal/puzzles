@@ -1,0 +1,13 @@
+sudo: true
+dist: trusty
+language: cpp
+
+install:
+  - wget -q https://github.com/philsquared/Catch/archive/v1.5.9.tar.gz
+  - tar xf v1.5.9.tar.gz
+  - sudo cp -r Catch-1.5.9 /usr/include/Catch
+
+script:
+  - mkdir build && cd build
+  - cmake ..
+  - make run_all
