@@ -5,6 +5,7 @@ language: cpp
 matrix:
   include:
     - compiler: gcc
+      addons: &gcc5
         apt:
           sources:
             - ubuntu-toolchain-r-test
