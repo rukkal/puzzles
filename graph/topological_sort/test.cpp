@@ -61,7 +61,7 @@ TEST_CASE("V={0,1}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1} E={{0, 1}}")
+TEST_CASE("V={0,1} E={(0, 1)}")
 {
     auto graph = Digraph{ 2 };
     graph.add_edge(0, 1);
@@ -70,7 +70,7 @@ TEST_CASE("V={0,1} E={{0, 1}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2} E={{0,1}, {1,2}}")
+TEST_CASE("V={0,1,2} E={(0, 1), (1, 2)}")
 {
     auto graph = Digraph{ 3 };
     graph.add_edge(0, 1);
@@ -79,7 +79,7 @@ TEST_CASE("V={0,1,2} E={{0,1}, {1,2}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2} E={{0,1}}")
+TEST_CASE("V={0,1,2} E={(0, 1)}")
 {
     auto graph = Digraph{ 3 };
     graph.add_edge(0, 1);
@@ -88,7 +88,7 @@ TEST_CASE("V={0,1,2} E={{0,1}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2} E={{0,1}, {0,2}}")
+TEST_CASE("V={0,1,2} E={(0, 1), (0, 2)}")
 {
     auto graph = Digraph{ 3 };
     graph.add_edge(0, 1);
@@ -97,7 +97,7 @@ TEST_CASE("V={0,1,2} E={{0,1}, {0,2}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2} E={{0,1}, {0,2}, {1,2}}")
+TEST_CASE("V={0,1,2} E={(0, 1), (0, 2), (1, 2)}")
 {
     auto graph = Digraph{ 3 };
     graph.add_edge(0, 1);
@@ -107,7 +107,7 @@ TEST_CASE("V={0,1,2} E={{0,1}, {0,2}, {1,2}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2,3} E={{0,1}, {1,2}, {0,3}, {3,2}}")
+TEST_CASE("V={0,1,2,3} E={(0, 1), (1, 2), (0, 3), (3, 2)}")
 {
     auto graph = Digraph{ 4 };
     graph.add_edge(0, 1);
@@ -118,7 +118,7 @@ TEST_CASE("V={0,1,2,3} E={{0,1}, {1,2}, {0,3}, {3,2}}")
     REQUIRE(checker{graph}.is_valid_topological_sort(topological_sort));
 }
 
-TEST_CASE("V={0,1,2,3,4,5} E={{0,1}, {0,2}, {1, 2}, {1, 3}, {2, 4}, {4, 3}, {3, 5}}")
+TEST_CASE("V={0,1,2,3,4,5} E={(0, 1), (0, 2), (1, 2), (1, 3), (2, 4), (4, 3), (3, 5)}")
 {
     auto graph = Digraph{ 6 };
     graph.add_edge(0, 1);

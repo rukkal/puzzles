@@ -17,7 +17,7 @@ TEST_CASE("V={0} E={}")
     REQUIRE(graph.get_adjacent_vertex_ids(0) == std::vector<Digraph::VertexID>{ });
 }
 
-TEST_CASE("V={0} E={{1, 1}}")
+TEST_CASE("V={0} E={(1, 1)}")
 {
     auto graph = Digraph(1);
     graph.add_edge(0, 0);
@@ -35,7 +35,7 @@ TEST_CASE("V={0, 1} E={}")
     REQUIRE(graph.get_adjacent_vertex_ids(1) == std::vector<Digraph::VertexID>{ });
 }
 
-TEST_CASE("V={0, 1} E={{0, 1}}")
+TEST_CASE("V={0, 1} E={(0, 1)}")
 {
     auto graph = Digraph(2);
     graph.add_edge(0, 1);
@@ -45,7 +45,7 @@ TEST_CASE("V={0, 1} E={{0, 1}}")
     REQUIRE(graph.get_adjacent_vertex_ids(1) == std::vector<Digraph::VertexID>{ });
 }
 
-TEST_CASE("V={0, 1} E={{0, 1}, {1, 0}}")
+TEST_CASE("V={0, 1} E={(0, 1), (1, 0)}")
 {
     auto graph = Digraph(2);
     graph.add_edge(0, 1);
