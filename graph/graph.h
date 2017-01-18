@@ -4,75 +4,107 @@
 #include <cstddef>
 #include <algorithm>
 #include <vector>
+#include <unordered_set>
+
 
 class Graph
 {
 public:
-    class Vertex
-    {
-    public:
-        using id_type = size_t;
-    public:
-        Vertex(id_type id) : id(id)
-        {}
-
-        id_type get_id() const
-        {
-            return id;
-        }
-
-        const std::vector<const Vertex*>& get_adjacent_vertices() const
-        {
-            return adjacent_vertices;
-        }
-
-        std::vector<const Vertex*>& get_adjacent_vertices()
-        {
-            return adjacent_vertices;
-        }
-
-    private:
-        id_type id;
-        std::vector<const Vertex*> adjacent_vertices;
-    };
+    using VertexID = size_t;
 
 public:
     Graph() = default;
 
     Graph(size_t number_of_vertices)
+        : number_of_vertices(number_of_vertices)
+        , adjacency_matrix(number_of_vertices * number_of_vertices)
+    {}
+
+    const std::vector<VertexID> get_vertex_ids() const
     {
-        vertices.reserve(number_of_vertices);
-        for(size_t i=0; i<number_of_vertices; ++i)
+        auto vertex_ids = std::vector<VertexID>{};
+        for(VertexID id = 0; id < get_number_of_vertices(); ++id)
         {
-            vertices.push_back(Vertex(i));
+            vertex_ids.push_back(id);
         }
+        return vertex_ids;
     }
 
-    const Vertex& get_vertex(Vertex::id_type id) const
+    const std::vector<VertexID> get_adjacent_vertex_ids(VertexID from) const
     {
-        return vertices[id];
+        auto adjacent_vertex_ids = std::vector<VertexID>{};
+        for(VertexID to = 0; to < get_number_of_vertices(); ++to)
+        {
+            if(get_adjacency_matrix_entry(from, to))
+            {
+                adjacent_vertex_ids.push_back(to);
+            }
+        }
+        return adjacent_vertex_ids;
     }
 
-    const std::vector<Vertex>& get_vertices() const
-    {
-        return vertices;
-    }
-
-    void add_directed_edge(Vertex::id_type from, Vertex::id_type to)
+    void add_directed_edge(VertexID from, VertexID to)
     {
         assert(is_valid_vertex_id(from));
         assert(is_valid_vertex_id(to));
-        auto& from_vertex = vertices[from];
-        auto& to_vertex = vertices[to];
-        from_vertex.get_adjacent_vertices().push_back(&to_vertex);
+        set_adjacency_matrix_entry(from, to, true);
     }
 
-private:
-    bool is_valid_vertex_id(Vertex::id_type id) const
+    bool has_path(Graph::VertexID from, Graph::VertexID to) const
     {
-        return id < vertices.size();
+        assert(is_valid_vertex_id(from));
+        assert(is_valid_vertex_id(to));
+        auto visited_vertices = std::unordered_set<Graph::VertexID>{};
+        return has_path_dfs(from, to, visited_vertices);
+    }
+
+    size_t get_number_of_vertices() const
+    {
+        return number_of_vertices;
     }
 
 private:
-    std::vector<Vertex> vertices;
+    bool is_valid_vertex_id(VertexID id) const
+    {
+        return id < get_number_of_vertices();
+    }
+
+    bool get_adjacency_matrix_entry(VertexID from, VertexID to) const
+    {
+        return adjacency_matrix[from * get_number_of_vertices() + to];
+    }
+
+    void set_adjacency_matrix_entry(VertexID from, VertexID to, bool entry_value)
+    {
+        adjacency_matrix[from * get_number_of_vertices() + to] = entry_value;
+    }
+
+    bool has_path_dfs(Graph::VertexID from, Graph::VertexID to, std::unordered_set<Graph::VertexID>& visited_vertices) const
+    {
+        if(from == to)
+        {
+            return true;
+        }
+
+        visited_vertices.insert(from);
+        for(auto adj : get_adjacent_vertex_ids(from))
+        {
+            bool was_vertex_visited = (visited_vertices.find(adj) != visited_vertices.cend());
+            if(was_vertex_visited)
+            {
+                continue;
+            }
+
+            if(has_path_dfs(adj, to, visited_vertices))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+private:
+    size_t number_of_vertices;
+    std::vector<bool> adjacency_matrix;
 };
