@@ -43,7 +43,7 @@ public:
         return adjacent_vertex_ids;
     }
 
-    void add_directed_edge(VertexID from, VertexID to)
+    void add_edge(VertexID from, VertexID to)
     {
         assert(is_valid_vertex_id(from));
         assert(is_valid_vertex_id(to));
