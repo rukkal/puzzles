@@ -3,18 +3,18 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_set>
-#include "../graph.h"
+#include "../digraph.h"
 
 class Solution
 {
 public:
-    std::vector<Graph::VertexID> solve_topological_sort(const Graph& graph) const
+    std::vector<Digraph::VertexID> solve_topological_sort(const Digraph& graph) const
     {
         if(graph.get_number_of_vertices() == 0)
             return {};
 
-        auto visited_vertices = std::unordered_set<Graph::VertexID>{};
-        auto reversed_result = std::vector<Graph::VertexID>{};
+        auto visited_vertices = std::unordered_set<Digraph::VertexID>{};
+        auto reversed_result = std::vector<Digraph::VertexID>{};
 
         for(auto vertex : graph.get_vertex_ids())
         {
@@ -32,10 +32,10 @@ public:
     }
 
 private:
-    void dfs(   const Graph::VertexID vertex,
-                const Graph& graph,
-                std::unordered_set<Graph::VertexID>& visited_vertices,
-                std::vector<Graph::VertexID>& reversed_result) const
+    void dfs(   const Digraph::VertexID vertex,
+                const Digraph& graph,
+                std::unordered_set<Digraph::VertexID>& visited_vertices,
+                std::vector<Digraph::VertexID>& reversed_result) const
     {
         visited_vertices.insert(vertex);
         for(auto adjacent_vertex : graph.get_adjacent_vertex_ids(vertex))

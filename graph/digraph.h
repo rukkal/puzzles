@@ -7,15 +7,15 @@
 #include <unordered_set>
 
 
-class Graph
+class Digraph
 {
 public:
     using VertexID = size_t;
 
 public:
-    Graph() = default;
+    Digraph() = default;
 
-    Graph(size_t number_of_vertices)
+    Digraph(size_t number_of_vertices)
         : number_of_vertices(number_of_vertices)
         , adjacency_matrix(number_of_vertices * number_of_vertices)
     {}
@@ -50,11 +50,11 @@ public:
         set_adjacency_matrix_entry(from, to, true);
     }
 
-    bool has_path(Graph::VertexID from, Graph::VertexID to) const
+    bool has_path(Digraph::VertexID from, Digraph::VertexID to) const
     {
         assert(is_valid_vertex_id(from));
         assert(is_valid_vertex_id(to));
-        auto visited_vertices = std::unordered_set<Graph::VertexID>{};
+        auto visited_vertices = std::unordered_set<Digraph::VertexID>{};
         return has_path_dfs(from, to, visited_vertices);
     }
 
@@ -79,7 +79,7 @@ private:
         adjacency_matrix[from * get_number_of_vertices() + to] = entry_value;
     }
 
-    bool has_path_dfs(Graph::VertexID from, Graph::VertexID to, std::unordered_set<Graph::VertexID>& visited_vertices) const
+    bool has_path_dfs(Digraph::VertexID from, Digraph::VertexID to, std::unordered_set<Digraph::VertexID>& visited_vertices) const
     {
         if(from == to)
         {
