@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include "../digraph.h"
+#include <digraph.h>
 #include "solution.h"
 
 class checker

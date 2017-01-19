@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_set>
-#include "../digraph.h"
+#include <digraph.h>
 
 class Solution
 {
