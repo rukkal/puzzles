@@ -2,15 +2,18 @@
 
 #include <cassert>
 #include <cstddef>
+#include <limits>
 #include <algorithm>
 #include <vector>
 #include <unordered_set>
-
 
 class Digraph
 {
 public:
     using VertexID = size_t;
+    using weight_type = int;
+
+    static const weight_type WEIGHT_INFINITE = std::numeric_limits<weight_type>::max();
 
 public:
     Digraph() = default;
@@ -18,7 +21,23 @@ public:
     Digraph(size_t number_of_vertices)
         : number_of_vertices(number_of_vertices)
         , adjacency_matrix(number_of_vertices * number_of_vertices)
-    {}
+        , weights_matrix(number_of_vertices * number_of_vertices, weight_type(WEIGHT_INFINITE))
+    {
+    }
+
+    void add_edge(VertexID from, VertexID to)
+    {
+        assert(is_valid_vertex_id(from));
+        assert(is_valid_vertex_id(to));
+        set_adjacency_matrix_entry(from, to, true);
+    }
+
+    void set_weight(VertexID from, VertexID to, weight_type weight)
+    {
+        assert(is_valid_vertex_id(from));
+        assert(is_valid_vertex_id(to));
+        set_matrix_entry(weights_matrix, from, to, weight);
+    }
 
     const std::vector<VertexID> get_vertex_ids() const
     {
@@ -43,11 +62,20 @@ public:
         return adjacent_vertex_ids;
     }
 
-    void add_edge(VertexID from, VertexID to)
+    std::vector<std::vector<weight_type>> get_weights_matrix() const
     {
-        assert(is_valid_vertex_id(from));
-        assert(is_valid_vertex_id(to));
-        set_adjacency_matrix_entry(from, to, true);
+        auto matrix = std::vector<std::vector<weight_type>>{};
+        auto n = get_number_of_vertices();
+
+        for(size_t i=0; i<n; ++i)
+        {
+            auto weight_begin = weights_matrix.begin() + i*n;
+            auto weight_end = weights_matrix.begin() + i*n + n;
+            auto row = std::vector<weight_type>(weight_begin, weight_end);
+            matrix.emplace_back(std::move(row));
+        }
+
+        return matrix;
     }
 
     bool has_path(Digraph::VertexID from, Digraph::VertexID to) const
@@ -79,6 +107,13 @@ private:
         adjacency_matrix[from * get_number_of_vertices() + to] = entry_value;
     }
 
+    template<class TMatrix, class TValue>
+    void set_matrix_entry(TMatrix& matrix, VertexID i, VertexID j, const TValue& weight)
+    {
+        matrix[i * get_number_of_vertices() + j] = weight;
+    }
+
+
     bool has_path_dfs(Digraph::VertexID from, Digraph::VertexID to, std::unordered_set<Digraph::VertexID>& visited_vertices) const
     {
         if(from == to)
@@ -107,4 +142,5 @@ private:
 private:
     size_t number_of_vertices;
     std::vector<bool> adjacency_matrix;
+    std::vector<weight_type> weights_matrix;
 };
