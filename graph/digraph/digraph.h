@@ -29,7 +29,7 @@ public:
     {
         assert(is_valid_vertex_id(from));
         assert(is_valid_vertex_id(to));
-        set_adjacency_matrix_entry(from, to, true);
+        set_matrix_entry(adjacency_matrix, from, to, true);
     }
 
     void set_weight(VertexID from, VertexID to, weight_type weight)
@@ -54,7 +54,7 @@ public:
         auto adjacent_vertex_ids = std::vector<VertexID>{};
         for(VertexID to = 0; to < get_number_of_vertices(); ++to)
         {
-            if(get_adjacency_matrix_entry(from, to))
+            if(get_matrix_entry(adjacency_matrix, from, to))
             {
                 adjacent_vertex_ids.push_back(to);
             }
@@ -97,20 +97,16 @@ private:
         return id < get_number_of_vertices();
     }
 
-    bool get_adjacency_matrix_entry(VertexID from, VertexID to) const
+    template<class T>
+    T get_matrix_entry(const std::vector<T>& matrix, VertexID i, VertexID j) const
     {
-        return adjacency_matrix[from * get_number_of_vertices() + to];
+        return matrix[i * get_number_of_vertices() + j];
     }
 
-    void set_adjacency_matrix_entry(VertexID from, VertexID to, bool entry_value)
+    template<class T>
+    void set_matrix_entry(std::vector<T>& matrix, VertexID i, VertexID j, const T& value)
     {
-        adjacency_matrix[from * get_number_of_vertices() + to] = entry_value;
-    }
-
-    template<class TMatrix, class TValue>
-    void set_matrix_entry(TMatrix& matrix, VertexID i, VertexID j, const TValue& weight)
-    {
-        matrix[i * get_number_of_vertices() + j] = weight;
+        matrix[i * get_number_of_vertices() + j] = value;
     }
 
 
