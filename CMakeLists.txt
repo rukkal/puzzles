@@ -36,7 +36,7 @@ foreach(subdir ${subdirs})
         set(run_target run_${test_file})
         add_custom_target(${run_target} COMMAND "./${test_file}" DEPENDS ${subdir}/${test_file_cpp})
         set(run_all_command ${run_all_command} COMMAND "./${test_file}")
-        set(run_all_dependencies ${run_all_dependencies} "${subdir}/${test_file_cpp}")
+        set(run_all_dependencies ${run_all_dependencies} "${test_file}")
     endforeach()
 endforeach()
 
