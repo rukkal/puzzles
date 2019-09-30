@@ -1,18 +1,6 @@
 sudo: true
-dist: trusty
+dist: bionic
 language: cpp
-
-matrix:
-  include:
-    - compiler: gcc
-      addons: &gcc5
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-5
-            - g++-5
-      env: cc=gcc-5 cxx=g++-5
 
 install:
   - wget -q https://github.com/philsquared/Catch/archive/v1.5.9.tar.gz
@@ -20,8 +8,6 @@ install:
   - sudo cp -r Catch-1.5.9 /usr/include/Catch
 
 script:
-  - export CC=$cc
-  - export CXX=$cxx
   - mkdir build && cd build
   - cmake ..
   - make run_all
